@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shelby-Offc - Pembayaran via DANA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --dana-blue: #00d1ff;
+            --dana-dark: #0085ff;
+            --black-1: #000000;
+            --black-2: #121212;
+            --black-3: #1e1e1e;
+            --black-4: #333333;
+            --gray-1: #aaaaaa;
+            --gray-2: #cccccc;
+            --gray-3: #666666;
+            --telegram-blue: #0088cc;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            background-color: var(--black-1);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: radial-gradient(circle at 25% 25%, rgba(0, 209, 255, 0.05) 0%, transparent 50%);
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background-color: var(--black-2);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 209, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+            z-index: 0;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px rgba(0, 209, 255, 0.4));
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(0, 209, 255, 0.4)); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(0, 209, 255, 0.6)); }
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: var(--gray-1);
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease;
+        }
+        
+        .payment-details {
+            background-color: var(--black-3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 209, 255, 0.1);
+            animation: slideInUp 0.8s ease;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--black-4);
+        }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            color: var(--gray-1);
+        }
+        
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .dana-number-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .dana-number {
+            font-size: 18px;
+            letter-spacing: 1px;
+            color: var(--dana-blue);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 6px;
+            text-shadow: 0 0 8px rgba(0, 209, 255, 0.5);
+        }
+        
+        .dana-number:hover {
+            background-color: rgba(0, 209, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .dana-number:active {
+            transform: scale(0.95) translateY(0);
+            background-color: rgba(0, 209, 255, 0.2);
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, var(--dana-blue), var(--dana-dark));
+            color: #000000;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-left: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .copy-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .instructions {
+            background-color: var(--black-3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 209, 255, 0.1);
+            animation: slideInUp 0.8s 0.2s both;
+        }
+        
+        .instructions h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .instructions h2::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300d1ff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>');
+            background-size: contain;
+            margin-right: 10px;
+        }
+        
+        .steps {
+            list-style-type: none;
+        }
+        
+        .steps li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--gray-2);
+            line-height: 1.5;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .steps li:nth-child(1) { animation-delay: 0.3s; }
+        .steps li:nth-child(2) { animation-delay: 0.4s; }
+        .steps li:nth-child(3) { animation-delay: 0.5s; }
+        .steps li:nth-child(4) { animation-delay: 0.6s; }
+        .steps li:nth-child(5) { animation-delay: 0.7s; }
+        .steps li:nth-child(6) { animation-delay: 0.8s; }
+        
+        .steps li:before {
+            content: counter(step);
+            counter-increment: step;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, var(--dana-blue), var(--dana-dark));
+            color: #000000;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .telegram-confirm {
+            background-color: var(--black-3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 136, 204, 0.2);
+            animation: slideInUp 0.8s 0.4s both;
+        }
+        
+        .telegram-confirm h2 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .telegram-confirm h2::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%230088cc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>');
+            background-size: contain;
+            margin-right: 10px;
+        }
+        
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--telegram-blue), #00a8ff);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+        
+        .telegram-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 136, 204, 0.3);
+        }
+        
+        .telegram-btn:active {
+            transform: translateY(0);
+        }
+        
+        .telegram-btn::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.25-.41-.89-.6-1.36-.32l-2.5 1.67-1.03-.86c-.4-.34-.98-.29-1.33.11-.34.4-.29.98.11 1.33l1.75 1.47c.16.13.37.2.58.2.25 0 .5-.1.69-.28l3.25-2.17c.47-.31.58-.94.26-1.35z"/></svg>');
+            background-size: contain;
+            margin-right: 8px;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: var(--gray-3);
+            margin-top: 20px;
+            animation: fadeIn 1s 0.5s both;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--dana-blue);
+            opacity: 0;
+            z-index: 10;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .logo {
+                width: 100px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .dana-number {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg" alt="Logo DANA" class="logo animate__animated animate__fadeIn">
+                <h1 class="animate__animated animate__fadeIn">Shelby-Offc</h1>
+                <div class="subtitle animate__animated animate__fadeIn">Pembayaran via DANA</div>
+            </div>
+            
+            <div class="payment-details">
+                <div class="detail-row animate__animated animate__fadeIn">
+                    <span class="detail-label">Metode Pembayaran</span>
+                    <span class="detail-value">DANA</span>
+                </div>
+                <div class="detail-row animate__animated animate__fadeIn">
+                    <span class="detail-label">Nomor DANA</span>
+                    <div class="dana-number-container">
+                        <span class="dana-number" id="danaNumber">083831234420</span>
+                        <button class="copy-btn" id="copyBtn">Salin</button>
+                    </div>
+                </div>
+                <div class="detail-row animate__animated animate__fadeIn">
+                    <span class="detail-label">Penerima</span>
+                    <span class="detail-value">Shelby-Offc</span>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h2 class="animate__animated animate__fadeIn">Petunjuk Pembayaran</h2>
+                <ol class="steps">
+                    <li class="animate__animated animate__fadeIn">Buka aplikasi DANA di ponsel Anda</li>
+                    <li class="animate__animated animate__fadeIn">Pergi ke menu 'Kirim Uang'</li>
+                    <li class="animate__animated animate__fadeIn">Masukkan nomor DANA di atas atau scan QR code</li>
+                    <li class="animate__animated animate__fadeIn">Masukkan nominal pembayaran</li>
+                    <li class="animate__animated animate__fadeIn">Tambahkan catatan jika perlu (opsional)</li>
+                    <li class="animate__animated animate__fadeIn">Konfirmasi dan selesaikan transaksi</li>
+                </ol>
+            </div>
+            
+            <div class="telegram-confirm">
+                <h2 class="animate__animated animate__fadeIn">Konfirmasi Pembayaran</h2>
+                <p class="animate__animated animate__fadeIn">Setelah transfer, harap konfirmasi melalui Telegram:</p>
+                <a href="https://t.me/kyurazhost" class="telegram-btn animate__animated animate__fadeIn" target="_blank">Hubungi via Telegram</a>
+            </div>
+            
+            <div class="footer animate__animated animate__fadeIn">
+                Terima kasih telah menggunakan layanan Shelby-Offc
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const steps = document.querySelector('.steps');
+            steps.style.counterReset = 'step';
+            
+            const danaNumber = document.getElementById('danaNumber');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            // Efek ketika nomor DANA diklik
+            danaNumber.addEventListener('click', () => {
+                // Animasi tekan
+                danaNumber.style.transform = 'scale(0.95) translateY(0)';
+                danaNumber.style.backgroundColor = 'rgba(0, 209, 255, 0.2)';
+                
+                // Kembali ke normal setelah 0.3 detik
+                setTimeout(() => {
+                    danaNumber.style.transform = '';
+                    danaNumber.style.backgroundColor = '';
+                }, 300);
+                
+                // Salin otomatis ketika diklik
+                copyToClipboard();
+            });
+            
+            // Fungsi untuk menyalin nomor
+            function copyToClipboard() {
+                const text = danaNumber.innerText;
+                
+                navigator.clipboard.writeText(text).then(() => {
+                    // Animasi tombol
+                    copyBtn.textContent = 'Tersalin!';
+                    copyBtn.style.background = 'linear-gradient(135deg, #00ff88, #0085ff)';
+                    
+                    // Buat efek confetti
+                    createConfetti();
+                    
+                    // Kembali ke normal setelah 2 detik
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Salin';
+                        copyBtn.style.background = 'linear-gradient(135deg, var(--dana-blue), var(--dana-dark))';
+                    }, 2000);
+                });
+            }
+            
+            // Fungsi untuk efek confetti
+            function createConfetti() {
+                const colors = ['#00d1ff', '#00ff88', '#ff00aa', '#ffcc00', '#0088cc'];
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = -10 + 'px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.width = Math.random() * 8 + 6 + 'px';
+                    confetti.style.height = Math.random() * 8 + 6 + 'px';
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Animasi confetti
+                    const animationDuration = 1000 + Math.random() * 2000;
+                    const animation = confetti.animate([
+                        { 
+                            top: -10 + 'px', 
+                            opacity: 1, 
+                            transform: `rotate(0deg) scale(1)`,
+                            left: Math.random() * 100 + 'vw'
+                        },
+                        { 
+                            top: Math.random() * 100 + 50 + 'vh', 
+                            opacity: 0, 
+                            transform: `rotate(${Math.random() * 360}deg) scale(0.2)`,
+                            left: (Math.random() * 40 - 20) + parseFloat(confetti.style.left) + 'vw'
+                        }
+                    ], {
+                        duration: animationDuration,
+                        easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                    });
+                    
+                    animation.onfinish = () => {
+                        confetti.remove();
+                    };
+                }
+            }
+            
+            // Event listener untuk tombol salin
+            copyBtn.addEventListener('click', copyToClipboard);
+            
+            // Animasi saat halaman dimuat
+            setTimeout(() => {
+                document.querySelector('.logo').classList.add('animate__pulse');
+            }, 1000);
+        });
+    </script>
+</body>
+  </html>
